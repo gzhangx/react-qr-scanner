@@ -21,6 +21,7 @@ class Reader extends Component {
     super(props)
 
     this.els = {}
+    this.checkCount = 0;
     this.initialStreamStarted = false;
     // Bind function to the class
     this.initiate = this.initiate.bind(this)
@@ -107,7 +108,7 @@ class Reader extends Component {
   }
 
   initiate(props = this.props) {
-    const { onError, facingMode, chooseDeviceId, initialStream, isIos } = props
+    const { onError, facingMode, chooseDeviceId, initialStream, isIos, setDebugMsg } = props
 
     if (initialStream && !this.initialStreamStarted) {
       this.initialStreamStarted = true;
@@ -118,8 +119,10 @@ class Reader extends Component {
         height: { min: 240, ideal: 720, max: 1080 },
       };
       if (isIos) constraints = {};
-      getDeviceId(facingMode, chooseDeviceId)
+      if (setDebugMsg && isIos) setDebugMsg(`is ios`);
+      getDeviceId(facingMode, chooseDeviceId, setDebugMsg)
         .then(deviceId => {
+          setDebugMsg(`DeviceId=${deviceId}`)
           return navigator.mediaDevices.getUserMedia({
             video: Object.assign({
               deviceId,
@@ -176,7 +179,7 @@ class Reader extends Component {
   }
 
   check() {
-    const { legacyMode, maxImageSize, delay } = this.props
+    const { legacyMode, maxImageSize, delay, setDebugMsg } = this.props
     const { preview, canvas, img } = this.els
 
     // Get image/video dimensions
@@ -201,6 +204,8 @@ class Reader extends Component {
     const previewIsPlaying = preview &&
       preview.readyState === preview.HAVE_ENOUGH_DATA
 
+    this.checkCount++;
+    setDebugMsg('checkCount', `checkcount=${this.checkCount}`);
     if (legacyMode || previewIsPlaying) {
       const ctx = canvas.getContext('2d')
       ctx.drawImage(legacyMode ? img : preview, 0, 0, width, height)
@@ -215,9 +220,10 @@ class Reader extends Component {
   }
 
   handleWorkerMessage(e) {
-    const { onScan, legacyMode, delay } = this.props
+    const { onScan, legacyMode, delay, setDebugMsg } = this.props
     const { preview, canvas, img } = this.els
     const decoded = e.data
+    setDebugMsg('handleWorkerMessage', `checkcount=${this.checkCount}`, e);
     if (decoded) {
       const ctx = canvas.getContext('2d')
       ctx.drawImage(legacyMode ? img : preview, 0, 0, canvas.width, canvas.height)
