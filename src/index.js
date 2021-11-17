@@ -107,20 +107,24 @@ class Reader extends Component {
   }
 
   initiate(props = this.props) {
-    const { onError, facingMode, chooseDeviceId, initialStream } = props
+    const { onError, facingMode, chooseDeviceId, initialStream, isIos } = props
 
     if (initialStream && !this.initialStreamStarted) {
       this.initialStreamStarted = true;
       this.handleVideo(initialStream);
     } else {
+      let constraints = {
+        width: { min: 360, ideal: 1280, max: 1920 },
+        height: { min: 240, ideal: 720, max: 1080 },
+      };
+      if (isIos) constraints = {};
       getDeviceId(facingMode, chooseDeviceId)
         .then(deviceId => {
           return navigator.mediaDevices.getUserMedia({
-            video: {
+            video: Object.assign({
               deviceId,
-              width: { min: 360, ideal: 1280, max: 1920 },
-              height: { min: 240, ideal: 720, max: 1080 },
-            },
+              
+            }, constraints),
           })
         })
         .then(this.handleVideo)

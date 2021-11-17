@@ -1,7 +1,7 @@
 {
-  "name": "react-qr-scanner",
+  "name": "react-qr-scanner-ios",
   "version": "0.0.11",
-  "description": "A react component for reading QR codes from the webcam.",
+  "description": "A react component for reading QR codes from the webcam. brach from https://github.com/kybarg/react-qr-scanner.git fixed for ios",
   "main": "./lib/index.js",
   "types": "./types",
   "scripts": {
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kybarg/react-qr-scanner.git"
+    "url": "https://github.com/gzhangx/react-qr-scanner.git"
   },
   "keywords": [
     "react",
@@ -22,7 +22,7 @@
     "qrreader",
     "qrscanner"
   ],
-  "author": "Ruslan Kyba <kybargr@gmail.com>",
+  "author": "Ruslan Kyba <kybargr@gmail.com> fixes gzhang",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kybarg/react-qr-scanner/issues"
